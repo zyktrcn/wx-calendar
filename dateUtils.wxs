@@ -1,0 +1,92 @@
+
+var weeksStr = [
+  '日',
+  '一',
+  '二',
+  '三',
+  '四',
+  '五',
+  '六'
+]
+
+var weatherUrls = [
+  {
+    name: '晴天',
+    url: '../../images/ic_weather_sunny.png'
+  },
+  {
+    name: '多云',
+    url: '../../images/ic_weather_cloudy.png'
+  },
+  {
+    name: '雨天',
+    url: '../../images/ic_weather_rainy.png'
+  },
+  {
+    name: '下雪',
+    url: '../../images/ic_weather_snow.png'
+  },
+  {
+    name: '沙尘',
+    url: '../../images/ic_weather_dust.png'
+  }
+]
+
+var isDate = function(date) {
+  if (!date) {
+    return getDate()
+  } else {
+    return getDate(date)
+  }
+}
+
+var dateInfo = function(date) {
+  
+  date = isDate(date)
+
+  return {
+    date: date.getDate(),
+    day: date.getDay(),
+    year: date.getFullYear(),
+    month: date.getMonth() + 1
+  }
+}
+
+var getDaysOfMonth = function(year, month) {
+  
+  var isLeapYear = false
+  if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+    isLeapYear = true
+  }
+
+  return [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1]
+}
+
+var getCalendar = function(date) {
+
+  var info = dateInfo(date)
+
+  var beginDay = getDate(info.year, info.month - 1, 1).getDay()
+
+  var days = getDaysOfMonth(info.year, info.month)
+
+  return {
+    days: days,
+    beginDay: beginDay,
+    lines: Math.ceil((days + beginDay) / 7)
+  }
+
+}
+
+var getWeather = function(weather) {
+  return weatherUrls.map(function(val) {
+    return val.name === weather
+  })[0].url || weatherUrls[0].url
+}
+
+module.exports = {
+  weeksStr: weeksStr,
+  dateInfo: dateInfo,
+  getWeather: getWeather,
+  getCalendar: getCalendar
+}

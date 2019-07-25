@@ -1,0 +1,42 @@
+<view class="container {{ isOpen ? 'change' : '' }}">
+  <view class="header">
+    <view class="now">
+      <view>{{dateUtils.dateInfo(today[swiperIndex]).month}}月 / {{dateUtils.dateInfo(today[swiperIndex]).year}}年</view>
+      <view class="decoration">
+        <view></view>
+        <view></view>
+      </view>
+    </view>
+    <image src="{{dateUtils.getWeather(weather)}}"></image>
+  </view>
+  <view  class="content">
+    <view class="weeks">
+      <view wx:for="{{dateUtils.weeksStr}}" wx:key="index">{{item}}</view>
+    </view>
+    <swiper circular="{{true}}" current="{{swiperIndex}}" style="height: {{ !isOpen ? '80rpx' : dateUtils.getCalendar(today[swiperIndex]).lines * 80 + 'rpx' }}" bindchange="swiperChange">
+      <swiper-item wx:for="{{3}}" wx:key="index" wx:for-item="swiperItem" >
+        <view class="days" wx:if="{{!isOpen}}">
+          <view wx:for="{{7}}" wx:key="index" class="{{dateUtils.dateInfo(today[swiperItem]).date > dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item ? 'before' : dateUtils.dateInfo(today[swiperItem]).date === dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item ? 'today' : ''}}" data-selected="{{dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item > 0 && dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item <= dateUtils.getCalendar(today[swiperItem]).days ? dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item : ''}}" bindtap="selectDate">
+            <text wx:if="{{dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item > 0 && dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item <= dateUtils.getCalendar(today[swiperItem]).days}}">{{ dateUtils.dateInfo(today[swiperItem]).date - dateUtils.dateInfo(today[swiperItem]).day + item }}</text>
+          </view>
+        </view>
+        <block wx:else>
+          <view class="days" wx:for="{{dateUtils.getCalendar(today[swiperItem]).lines}}" wx:key="index" wx:for-index="week">
+            <view wx:for="{{7}}" wx:key="index" class="{{dateUtils.dateInfo(today[swiperItem]).date > week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay ? 'before' : dateUtils.dateInfo(today[swiperItem]).date === week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay ? 'today' : ''}}" data-selected="{{week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay > 0 && week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay <= dateUtils.getCalendar(today[swiperItem]).days ? week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay : ''}}" bindtap="selectDate">
+              <text wx:if="{{week * 7 + item >= dateUtils.getCalendar(today[swiperItem]).beginDay && week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay <= dateUtils.getCalendar(today[swiperItem]).days}}">{{week * 7 + item + 1 - dateUtils.getCalendar(today[swiperItem]).beginDay}}</text>
+            </view>
+          </view>
+        </block>
+      </swiper-item>
+    </swiper>
+  </view>
+  <view class="bgGroup" wx:if="{{ isOpen }}">
+    <view></view>
+    <view></view>
+  </view>
+  <view class="close">
+    <view bindtap="openBtn"></view>
+  </view>
+</view>
+
+<wxs module="dateUtils" src="./dateUtils.wxs" />
